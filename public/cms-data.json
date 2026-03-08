@@ -1,0 +1,59 @@
+[
+  {
+    "id": "1",
+    "type": "hero",
+    "title": "Hero Section",
+    "order": 1,
+    "enabled": true,
+    "content": {
+      "headline": "Your Trusted partner",
+      "subheadline": "in apparel sourcing",
+      "backgroundImage": "/images/hero-bg.jpg",
+      "primaryButton": {
+        "text": "Get Started",
+        "url": "#contact"
+      },
+      "secondaryButton": {
+        "text": "Learn More",
+        "url": "#about"
+      }
+    },
+    "createdAt": "2026-03-08T09:10:07.977Z",
+    "updatedAt": "2026-03-08T09:10:07.977Z"
+  },
+  {
+    "id": "2",
+    "type": "features",
+    "title": "What Sets Us Apart",
+    "order": 2,
+    "enabled": true,
+    "content": {
+      "title": "What sets us apart",
+      "subtitle": "We stand out in every way",
+      "features": [
+        {
+          "icon": "📦",
+          "title": "Quality",
+          "description": "Premium materials and expert craftsmanship"
+        },
+        {
+          "icon": "⚡",
+          "title": "Efficient",
+          "description": "Fast turnaround times without compromising"
+        },
+        {
+          "icon": "✓",
+          "title": "On-time delivery",
+          "description": "Reliable and consistent delivery"
+        },
+        {
+          "icon": "🌐",
+          "title": "Global network",
+          "description": "Worldwide expertise and support"
+        }
+      ]
+    },
+    "createdAt": "2026-03-08T09:10:07.977Z",
+    "updatedAt": "2026-03-08T09:10:07.977Z"
+  }
+]
