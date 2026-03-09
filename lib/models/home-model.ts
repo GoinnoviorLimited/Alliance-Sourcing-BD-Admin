@@ -9,7 +9,6 @@ const ctaSchema = new Schema(
     },
     href: {
       type: String,
-      required: true,
       trim: true,
     },
   },
@@ -37,7 +36,6 @@ const heroSectionSchema = new Schema(
 
     cta: {
       type: ctaSchema,
-      required: true,
     },
   },
   {
