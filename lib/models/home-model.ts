@@ -68,5 +68,34 @@ const ApartSchema = new mongoose.Schema(
   }
 );
 
+//how we work section
+const WeWorkSchema = new mongoose.Schema(
+  {
+    title: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+    description: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+    icon: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+    image: {
+      type: String, // store image URL or path
+      trim: true,
+    },
+  },
+  {
+    timestamps: true,
+  }
+);
+
 export const HeroSection = mongoose.models.HeroSection || mongoose.model("HeroSection", heroSectionSchema);
 export const Apart = mongoose.models.Apart || mongoose.model("Apart", ApartSchema);
+export const WeWork = mongoose.models.WeWork || mongoose.model("WeWork", WeWorkSchema);
