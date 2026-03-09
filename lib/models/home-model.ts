@@ -1,5 +1,6 @@
 import mongoose, { Schema, model, models } from "mongoose";
 
+//Hero Section
 const ctaSchema = new Schema(
   {
     text: {
@@ -43,4 +44,29 @@ const heroSectionSchema = new Schema(
   }
 );
 
+//Apart section
+const ApartSchema = new mongoose.Schema(
+  {
+    icons: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+    title: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+    description: {
+      type: String,
+      required: true,
+      trim: true,
+    }
+  },
+  {
+    timestamps: true,
+  }
+);
+
 export const HeroSection = mongoose.models.HeroSection || mongoose.model("HeroSection", heroSectionSchema);
+export const Apart = mongoose.models.Apart || mongoose.model("Apart", ApartSchema);

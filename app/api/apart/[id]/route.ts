@@ -1,5 +1,5 @@
 import { connectToDB } from "@/lib/connectToDB";
-import { HeroSection } from "@/lib/models/home-model";
+import { Apart } from "@/lib/models/home-model";
 import { NextResponse } from "next/server";
 
 export async function PATCH(req: Request, { params }: { params: Promise<{ id: string }> }) {
@@ -9,7 +9,7 @@ export async function PATCH(req: Request, { params }: { params: Promise<{ id: st
   await connectToDB();
 
   try {
-    const updated = await HeroSection.findByIdAndUpdate(id, data, {
+    const updated = await Apart.findByIdAndUpdate(id, data, {
       new: true, // Returns the updated document
       runValidators: true, // Ensures model validation
     });
@@ -39,7 +39,7 @@ export async function DELETE(req: Request, { params }: { params: Promise<{ id: s
 
   try {
     await connectToDB();
-    const deleted = await HeroSection.findByIdAndDelete(id);
+    const deleted = await Apart.findByIdAndDelete(id);
     if (!deleted) {
       return NextResponse.json(
         { message: " data not found" },
@@ -59,3 +59,4 @@ export async function DELETE(req: Request, { params }: { params: Promise<{ id: s
     );
   }
 }
+
