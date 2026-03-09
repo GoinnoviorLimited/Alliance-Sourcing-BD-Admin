@@ -45,8 +45,8 @@ const defaultNavGroups: NavGroup[] = [
     ),
     items: [
       {
-        label: 'Hero',
-        href: '/admin/hero',
+        label: 'Banner',
+        href: '/admin/banner',
         icon: <span className="w-2 h-2 bg-purple-400 rounded-full"></span>,
       },
       {

@@ -1,23 +1,48 @@
-import mongoose from 'mongoose';
+import mongoose, { Schema, model, models } from "mongoose";
 
-/* =========================
-   🗓️ Event Schema
-========================= */
-const EventSchema = new mongoose.Schema({
-  title: { type: String, required: true },
-  banner: { type: String },
-  date: { type: Date, required: true },
-  time: { type: String },
-  location: { type: String },
-  status: {
-    type: String,
-    enum: ['Open for All', 'Closed', 'Coming Soon'],
-    default: 'Open for All'
+const ctaSchema = new Schema(
+  {
+    text: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+    href: {
+      type: String,
+      required: true,
+      trim: true,
+    },
   },
-  isPublished: { type: Boolean, default: true }
-}, { timestamps: true });
+  { _id: false }
+);
 
-/* =========================
-   ✅ Export All Models
-========================= */
-export const Event = mongoose.models.Event || mongoose.model('Event', EventSchema);
+const heroSectionSchema = new Schema(
+  {
+    title: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+
+    description: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+
+    image: {
+      type: String,
+      required: true,
+    },
+
+    cta: {
+      type: ctaSchema,
+      required: true,
+    },
+  },
+  {
+    timestamps: true,
+  }
+);
+
+export const HeroSection = mongoose.models.HeroSection || mongoose.model("HeroSection", heroSectionSchema);
