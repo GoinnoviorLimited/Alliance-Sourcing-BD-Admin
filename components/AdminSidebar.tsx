@@ -33,28 +33,14 @@ const defaultNavGroups: NavGroup[] = [
         href: '/admin',
         icon: <span className="w-2 h-2 bg-blue-400 rounded-full"></span>,
       },
+      
     ],
   },
   {
-    label: 'Manage',
+    label: 'Home Page',
     icon: (
       <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6a2 2 0 012-2h12a2 2 0 012 2v12a2 2 0 01-2 2H6a2 2 0 01-2-2V6z" />
-      </svg>
-    ),
-    items: [
-      {
-        label: 'All Sections',
-        href: '/admin/sections',
-        icon: <span className="w-2 h-2 bg-blue-400 rounded-full"></span>,
-      },
-    ],
-  },
-  {
-    label: 'Create Section',
-    icon: (
-      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-3m0 0l7-4 7 4M5 9v10a1 1 0 001 1h12a1 1 0 001-1V9m-9 11l4-4m0 0l4 4m-4-4V3" />
       </svg>
     ),
     items: [
@@ -64,34 +50,9 @@ const defaultNavGroups: NavGroup[] = [
         icon: <span className="w-2 h-2 bg-purple-400 rounded-full"></span>,
       },
       {
-        label: 'Features',
-        href: '/admin/features',
-        icon: <span className="w-2 h-2 bg-purple-400 rounded-full"></span>,
-      },
-      {
-        label: 'Services',
-        href: '/admin/services',
-        icon: <span className="w-2 h-2 bg-purple-400 rounded-full"></span>,
-      },
-      {
-        label: 'Process',
-        href: '/admin/process',
-        icon: <span className="w-2 h-2 bg-purple-400 rounded-full"></span>,
-      },
-      {
-        label: 'Products',
-        href: '/admin/products',
-        icon: <span className="w-2 h-2 bg-purple-400 rounded-full"></span>,
-      },
-      {
-        label: 'CTA',
-        href: '/admin/cta',
-        icon: <span className="w-2 h-2 bg-purple-400 rounded-full"></span>,
-      },
-      {
-        label: 'Footer',
-        href: '/admin/footer',
-        icon: <span className="w-2 h-2 bg-purple-400 rounded-full"></span>,
+        label: 'Featured Products',
+        href: '/admin/featured-products',
+        icon: <span className="w-2 h-2 bg-green-400 rounded-full"></span>,
       },
     ],
   },
@@ -133,11 +94,11 @@ export default function AdminSidebar() {
       <div className="p-6 border-b border-gray-200">
         <Link href="/admin" className="flex items-center gap-2">
           <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-lg flex items-center justify-center">
-            <span className="text-white font-bold text-lg">D</span>
+            <span className="text-white font-bold text-lg">AS</span>
           </div>
           <div>
-            <p className="font-bold text-gray-900">CMS Admin</p>
-            <p className="text-xs text-gray-600">v1.0</p>
+            <p className="font-bold text-gray-900">ASBD </p>
+            <p className="text-xs text-gray-600">AdminPanel-v1.0</p>
           </div>
         </Link>
       </div>
@@ -217,15 +178,6 @@ export default function AdminSidebar() {
 
       {/* Bottom Links */}
       <div className="p-4 border-t border-gray-200 space-y-2">
-        <Link
-          href="/"
-          className="flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 rounded-lg transition-colors"
-        >
-          <svg className="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-          </svg>
-          Public Website
-        </Link>
         <button
           onClick={handleLogout}
           className="w-full flex items-center gap-3 px-4 py-2 text-sm text-red-700 hover:bg-red-50 rounded-lg transition-colors font-medium"

@@ -9,7 +9,7 @@ const _geistMono = Geist_Mono({ subsets: ["latin"] });
 export const metadata: Metadata = {
   title: 'Premium Apparel Sourcing - Your Trusted Partner',
   description: 'Leading apparel sourcing company with quality products, efficient delivery, and global network. Your trusted partner in apparel sourcing.',
-  generator: 'v0.app',
+  generator: '360dsoul.com',
   keywords: 'apparel sourcing, clothing supplier, quality garments, wholesale apparel',
   authors: [{ name: 'Your Company' }],
   openGraph: {
