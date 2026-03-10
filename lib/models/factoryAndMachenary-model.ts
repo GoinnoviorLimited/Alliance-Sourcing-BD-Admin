@@ -27,6 +27,23 @@ const FactoryInfoSchema = new mongoose.Schema(
   }
 );
 
-export const FactoryInfo =
-  mongoose.models.FactoryInfo ||
-  mongoose.model("FactoryInfo", FactoryInfoSchema);
+// Advanced Machinery section
+
+const AdvancedMachinerySchema = new mongoose.Schema(
+  {
+    label: {
+      type: String,
+      required: true,
+      trim: true
+    },
+    image: {
+      type: String,
+      required: true,
+      trim: true
+    }
+  }
+);
+
+
+export const FactoryInfo = mongoose.models.FactoryInfo || mongoose.model("FactoryInfo", FactoryInfoSchema);
+export const AdvancedMachinery = mongoose.models.AdvancedMachinery || mongoose.model("AdvancedMachinery", AdvancedMachinerySchema);
