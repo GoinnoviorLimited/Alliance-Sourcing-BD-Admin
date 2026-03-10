@@ -10,21 +10,56 @@ export async function GET() {
   return response;
 }
 
+// export async function POST(req: Request) {
+//   try {
+//     const data = await req.json();
+
+//     // Connect to the database
+//     await connectToDB();
+//     await Contact.create(data);
+//     return NextResponse.json(
+//       { message: "Data created" },
+//       { status: 201 }
+//     );
+//   } catch (error) {
+//     console.error("Error creating data:", error);
+//     return NextResponse.json(
+//       { message: "Failed to create data" },
+//       { status: 500 }
+//     );
+//   }
+// }
+
+
+export async function OPTIONS() {
+  return NextResponse.json({}, {
+    headers: {
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, OPTIONS",
+      "Access-Control-Allow-Headers": "Content-Type"
+    }
+  });
+}
+
 export async function POST(req: Request) {
   try {
-    const data = await req.json();
+    const body = await req.json();
 
-    // Connect to the database
     await connectToDB();
-    await Contact.create(data);
+    const contact = await Contact.create(body);
+
     return NextResponse.json(
-      { message: "Data created" },
-      { status: 201 }
+      { success: true, data: contact },
+      {
+        status: 201,
+        headers: {
+          "Access-Control-Allow-Origin": "*"
+        }
+      }
     );
   } catch (error) {
-    console.error("Error creating data:", error);
     return NextResponse.json(
-      { message: "Failed to create data" },
+      { message: "Error creating data" },
       { status: 500 }
     );
   }
