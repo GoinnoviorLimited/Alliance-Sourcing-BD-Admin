@@ -44,6 +44,36 @@ const AdvancedMachinerySchema = new mongoose.Schema(
   }
 );
 
+//Machinery Inventory
+const MachineryInventorySchema = new mongoose.Schema(
+  {
+    category: {
+      type: String,
+      required: true,
+      trim: true,
+      index: true
+    },
+    name: {
+      type: String,
+      required: true,
+      trim: true
+    },
+    brand: {
+      type: String,
+      required: true,
+      trim: true
+    },
+    quantity: {
+      type: Number,
+      required: true,
+      min: 0
+    },
+  },
+);
+
+
+
 
 export const FactoryInfo = mongoose.models.FactoryInfo || mongoose.model("FactoryInfo", FactoryInfoSchema);
 export const AdvancedMachinery = mongoose.models.AdvancedMachinery || mongoose.model("AdvancedMachinery", AdvancedMachinerySchema);
+export const MachineryInventory = mongoose.models.MachineryInventory || mongoose.model("MachineryInventory", MachineryInventorySchema);
