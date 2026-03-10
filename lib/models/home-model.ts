@@ -96,6 +96,29 @@ const WeWorkSchema = new mongoose.Schema(
   }
 );
 
+// Buying House Services
+const BuyingHouseSchema = new mongoose.Schema(
+  {
+    title: {
+      type: String,
+      required: true,
+      trim: true
+    },
+    description: {
+      type: String,
+      required: true,
+      trim: true
+    },
+    icon: {
+      type: String,
+      required: true,
+      trim: true
+    }
+  }
+);
+
+
 export const HeroSection = mongoose.models.HeroSection || mongoose.model("HeroSection", heroSectionSchema);
 export const Apart = mongoose.models.Apart || mongoose.model("Apart", ApartSchema);
 export const WeWork = mongoose.models.WeWork || mongoose.model("WeWork", WeWorkSchema);
+export const BuyingHouse = mongoose.models.BuyingHouse || mongoose.model("BuyingHouse", BuyingHouseSchema);
