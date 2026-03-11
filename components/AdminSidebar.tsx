@@ -50,8 +50,8 @@ const defaultNavGroups: NavGroup[] = [
         icon: <span className="w-2 h-2 bg-purple-400 rounded-full"></span>,
       },
       {
-        label: 'Featured Products',
-        href: '/admin/featured-products',
+        label: 'We Work',
+        href: '/admin/we-work',
         icon: <span className="w-2 h-2 bg-green-400 rounded-full"></span>,
       },
     ],
