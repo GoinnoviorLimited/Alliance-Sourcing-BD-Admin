@@ -64,10 +64,26 @@ const defaultNavGroups: NavGroup[] = [
         href: '/admin/buying-house',
         icon: <span className="w-2 h-2 bg-blue-400 rounded-full"></span>,
       },
+      
+    ],
+  },
+  {
+    label: 'About Page',
+    icon: (
+      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-3m0 0l7-4 7 4M5 9v10a1 1 0 001 1h12a1 1 0 001-1V9m-9 11l4-4m0 0l4 4m-4-4V3" />
+      </svg>
+    ),
+    items: [
       {
         label: 'Established Excellence',
         href: '/admin/established-excellence',
         icon: <span className="w-2 h-2 bg-purple-400 rounded-full"></span>,
+      },
+      {
+        label: 'We Work',
+        href: '/admin/we-work',
+        icon: <span className="w-2 h-2 bg-green-400 rounded-full"></span>,
       }
     ],
   },
@@ -134,8 +150,8 @@ export default function AdminSidebar() {
                   <button
                     onClick={() => toggleGroup(group.label)}
                     className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-colors font-medium group ${anyItemActive
-                        ? 'bg-blue-50 text-blue-700'
-                        : 'text-gray-700 hover:bg-gray-50'
+                      ? 'bg-blue-50 text-blue-700'
+                      : 'text-gray-700 hover:bg-gray-50'
                       }`}
                   >
                     <span className={`${anyItemActive ? 'text-blue-600' : 'text-gray-600 group-hover:text-blue-600'}`}>
@@ -156,8 +172,8 @@ export default function AdminSidebar() {
                             key={item.href}
                             href={item.href}
                             className={`flex items-center gap-3 px-4 py-2 text-sm rounded-lg transition-colors ${isActive
-                                ? 'text-blue-700 bg-blue-50 font-medium'
-                                : 'text-gray-700 hover:bg-gray-50'
+                              ? 'text-blue-700 bg-blue-50 font-medium'
+                              : 'text-gray-700 hover:bg-gray-50'
                               }`}
                           >
                             {item.icon}
@@ -173,8 +189,8 @@ export default function AdminSidebar() {
                 <Link
                   href={group.items[0].href}
                   className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-colors font-medium group ${firstItemActive
-                      ? 'bg-blue-50 text-blue-700'
-                      : 'text-gray-700 hover:bg-gray-50'
+                    ? 'bg-blue-50 text-blue-700'
+                    : 'text-gray-700 hover:bg-gray-50'
                     }`}
                 >
                   <span className={`${firstItemActive ? 'text-blue-600' : 'text-gray-600 group-hover:text-blue-600'}`}>

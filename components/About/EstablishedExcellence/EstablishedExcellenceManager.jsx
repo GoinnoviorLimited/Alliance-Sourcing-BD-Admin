@@ -10,13 +10,7 @@ export default function EstablishedExcellenceManager() {
   const { data: excellenceItems, mutate, isLoading } = useEstablishedExcellenceData();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingItem, setEditingItem] = useState(null);
-  const [isDeleting, setIsDeleting] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-
-  const handleAdd = () => {
-    setEditingItem(null);
-    setIsModalOpen(true);
-  };
 
   const handleEdit = (item) => {
     setEditingItem(item);
@@ -81,7 +75,6 @@ export default function EstablishedExcellenceManager() {
       <EstablishedExcellenceList 
         items={excellenceItems} 
         onEdit={handleEdit} 
-        isDeleting={isDeleting} 
       />
 
       {/* Modal for Add/Edit */}
