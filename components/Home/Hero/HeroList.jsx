@@ -1,7 +1,14 @@
 "use client";
 import Image from "next/image";
+import { useState } from "react";
 
 export default function HeroList({ heros, onEdit, onDelete, isDeleting }) {
+  const [imageErrors, setImageErrors] = useState({});
+
+  const handleImageError = (heroId) => {
+    setImageErrors((prev) => ({ ...prev, [heroId]: true }));
+  };
+
   if (!heros) {
     return (
       <div className="flex justify-center items-center h-64">
@@ -19,29 +26,71 @@ export default function HeroList({ heros, onEdit, onDelete, isDeleting }) {
   }
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
       {heros.map((hero) => (
-        <div key={hero._id} className="bg-white rounded-lg shadow-md overflow-hidden border border-gray-200">
-          <div className="relative h-48 w-full">
-            <Image src={hero.image} alt={hero.title} width={300} height={200} className="object-cover" />
+        <div key={hero._id} className="bg-white rounded-lg shadow-md overflow-hidden border border-gray-200 hover:shadow-lg transition-shadow">
+          {/* Image Section */}
+          <div className="relative h-48 w-full bg-gray-100">
+            {!imageErrors[hero._id] ? (
+              <Image
+                src={hero.image}
+                alt={hero.title}
+                fill
+                className="object-cover"
+                onError={() => handleImageError(hero._id)}
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+              />
+            ) : (
+              <div className="absolute inset-0 flex flex-col items-center justify-center text-gray-400">
+                <svg className="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                </svg>
+                <p className="text-sm mt-2">Image not available</p>
+              </div>
+            )}
+            
+            {/* Cloudinary Badge (optional) */}
+            {hero.image?.includes('cloudinary') && (
+              <div className="absolute top-2 right-2 bg-blue-500 text-white text-xs px-2 py-1 rounded-full">
+                Cloudinary
+              </div>
+            )}
           </div>
 
+          {/* Content Section */}
           <div className="p-4">
-            <h3 className="text-xl font-semibold text-gray-900 mb-2">{hero.title}</h3>
+            <h3 className="text-xl font-semibold text-gray-900 mb-2 line-clamp-1">{hero.title}</h3>
             <p className="text-gray-600 mb-4 line-clamp-2">{hero.description}</p>
 
-            {hero.cta && (
-              <div className="mb-4 p-2 bg-gray-50 rounded">
-                <p className="text-sm text-gray-500">
-                  CTA: {hero.cta.text} → {hero.cta.href}
-                </p>
+            {/* CTA Display */}
+            {hero.cta && (hero.cta.text || hero.cta.href) && (
+              <div className="mb-4 p-3 bg-gray-50 rounded-lg border border-gray-100">
+                <p className="text-xs text-gray-500 mb-1">Call to Action:</p>
+                <div className="flex items-center gap-2 text-sm">
+                  {hero.cta.text && (
+                    <span className="font-medium text-blue-600">{hero.cta.text}</span>
+                  )}
+                  {hero.cta.href && (
+                    <>
+                      <span className="text-gray-400">→</span>
+                      <span className="text-gray-600 font-mono text-xs">{hero.cta.href}</span>
+                    </>
+                  )}
+                </div>
               </div>
             )}
 
-            <div className="flex justify-end gap-2 mt-4">
+            {/* Metadata */}
+            <div className="flex items-center justify-between text-xs text-gray-400 mb-4">
+              <span>ID: {hero._id.slice(-6)}</span>
+              <span>Updated: {new Date(hero.updatedAt).toLocaleDateString()}</span>
+            </div>
+
+            {/* Action Buttons */}
+            <div className="flex justify-end gap-2 mt-4 pt-3 border-t border-gray-100">
               <button
                 onClick={() => onEdit(hero)}
-                className="px-3 py-1.5 bg-yellow-500 text-white rounded hover:bg-yellow-600 transition-colors flex items-center gap-1"
+                className="px-3 py-1.5 bg-yellow-500 text-white rounded-md hover:bg-yellow-600 transition-colors flex items-center gap-1 text-sm"
               >
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path
@@ -56,7 +105,7 @@ export default function HeroList({ heros, onEdit, onDelete, isDeleting }) {
               <button
                 onClick={() => onDelete(hero._id)}
                 disabled={isDeleting}
-                className="px-3 py-1.5 bg-red-500 text-white rounded hover:bg-red-600 transition-colors flex items-center gap-1 disabled:opacity-50"
+                className="px-3 py-1.5 bg-red-500 text-white rounded-md hover:bg-red-600 transition-colors flex items-center gap-1 text-sm disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path
@@ -69,10 +118,6 @@ export default function HeroList({ heros, onEdit, onDelete, isDeleting }) {
                 Delete
               </button>
             </div>
-
-            <p className="text-xs text-gray-400 mt-2">
-              Updated: {new Date(hero.updatedAt).toLocaleDateString()}
-            </p>
           </div>
         </div>
       ))}
