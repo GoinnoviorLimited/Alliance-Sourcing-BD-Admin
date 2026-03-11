@@ -103,7 +103,7 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
         </div>
 
         {/* Page Content */}
-        <div className="flex-1 p-8">
+        <div className="flex-1 p-5">
           {children}
         </div>
       </main>
