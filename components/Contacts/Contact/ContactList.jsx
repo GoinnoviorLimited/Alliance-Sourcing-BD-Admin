@@ -1,6 +1,6 @@
 // components/admin/ContactList.jsx
 "use client";
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { formatDistanceToNow } from "date-fns";
 
 const STATUS_COLORS = {
@@ -17,21 +17,27 @@ export default function ContactList({ messages, onViewDetails, onStatusChange, o
   const [filter, setFilter] = useState("all");
   const [searchTerm, setSearchTerm] = useState("");
 
-  // Filter messages based on status and search
-  const filteredMessages = messages.filter(message => {
-    const matchesFilter = filter === "all" || message.status === filter;
-    const matchesSearch = 
-      message.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      message.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      message.subject.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      message.message.toLowerCase().includes(searchTerm.toLowerCase());
-    
-    return matchesFilter && matchesSearch;
-  });
+  // Filter and sort messages - LATEST ON TOP
+  const filteredAndSortedMessages = useMemo(() => {
+    // First filter the messages
+    const filtered = messages.filter(message => {
+      const matchesFilter = filter === "all" || message.status === filter;
+      const matchesSearch = 
+        message.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        message.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        message.subject.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        message.message.toLowerCase().includes(searchTerm.toLowerCase());
+      
+      return matchesFilter && matchesSearch;
+    });
 
-  // Sort by date (newest first)
-  const sortedMessages = [...filteredMessages].sort(
-    (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+    // Then sort by createdAt date in DESCENDING order (newest first)
+    return filtered.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+  }, [messages, filter, searchTerm]);
+
+  // Get unread count
+  const unreadCount = useMemo(() => 
+    messages.filter(m => m.status === "new").length, [messages]
   );
 
   if (messages.length === 0) {
@@ -69,7 +75,7 @@ export default function ContactList({ messages, onViewDetails, onStatusChange, o
                   : "bg-blue-100 text-blue-700 hover:bg-blue-200"
               }`}
             >
-              Unread ({messages.filter(m => m.status === "new").length})
+              Unread ({unreadCount})
             </button>
             <button
               onClick={() => setFilter("replied")}
@@ -104,9 +110,9 @@ export default function ContactList({ messages, onViewDetails, onStatusChange, o
         </div>
       </div>
 
-      {/* Messages List */}
+      {/* Messages List - LATEST ON TOP */}
       <div className="divide-y divide-gray-200">
-        {sortedMessages.map((message) => (
+        {filteredAndSortedMessages.map((message, index) => (
           <div
             key={message._id}
             className={`hover:bg-gray-50 transition-colors ${
@@ -137,6 +143,12 @@ export default function ContactList({ messages, onViewDetails, onStatusChange, o
                     <span className="text-xs text-gray-400">
                       {formatDistanceToNow(new Date(message.createdAt), { addSuffix: true })}
                     </span>
+                    {/* New message indicator for first 3 items */}
+                    {index < 3 && message.status === "new" && (
+                      <span className="inline-flex items-center px-1.5 py-0.5 rounded-full text-xs font-medium bg-blue-600 text-white">
+                        Latest
+                      </span>
+                    )}
                   </div>
                   
                   <h3 className="text-md font-medium text-gray-900 mb-1">
@@ -199,11 +211,17 @@ export default function ContactList({ messages, onViewDetails, onStatusChange, o
           </div>
         ))}
 
-        {sortedMessages.length === 0 && (
+        {filteredAndSortedMessages.length === 0 && (
           <div className="text-center py-8">
             <p className="text-gray-500">No messages match your filters</p>
           </div>
         )}
+      </div>
+
+      {/* Results Summary */}
+      <div className="p-3 border-t bg-gray-50 text-xs text-gray-500 flex justify-between">
+        <span>Showing {filteredAndSortedMessages.length} of {messages.length} messages</span>
+        <span>Sorted by: Latest first</span>
       </div>
     </div>
   );
