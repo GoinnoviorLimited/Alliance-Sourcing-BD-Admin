@@ -19,3 +19,9 @@ export const useApartData = () => {
   const { data, error, mutate } = useSWR(`${API_URL}/api/apart`, fetcher);
   return { data, error, isLoading: !data && !error, mutate };
 }
+
+export const useBuyingHouseData = () => {
+  const { data, error, mutate } = useSWR(`${API_URL}/api/buying-house`, fetcher);
+  return { data, error, isLoading: !data && !error, mutate };
+}
+

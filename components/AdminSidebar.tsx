@@ -33,7 +33,7 @@ const defaultNavGroups: NavGroup[] = [
         href: '/admin',
         icon: <span className="w-2 h-2 bg-blue-400 rounded-full"></span>,
       },
-      
+
     ],
   },
   {
@@ -59,6 +59,11 @@ const defaultNavGroups: NavGroup[] = [
         href: '/admin/apart',
         icon: <span className="w-2 h-2 bg-green-400 rounded-full"></span>,
       },
+      {
+        label: 'Buying House',
+        href: '/admin/buying-house',
+        icon: <span className="w-2 h-2 bg-blue-400 rounded-full"></span>,
+      }
     ],
   },
 ]
@@ -123,11 +128,10 @@ export default function AdminSidebar() {
                 <>
                   <button
                     onClick={() => toggleGroup(group.label)}
-                    className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-colors font-medium group ${
-                      anyItemActive
+                    className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-colors font-medium group ${anyItemActive
                         ? 'bg-blue-50 text-blue-700'
                         : 'text-gray-700 hover:bg-gray-50'
-                    }`}
+                      }`}
                   >
                     <span className={`${anyItemActive ? 'text-blue-600' : 'text-gray-600 group-hover:text-blue-600'}`}>
                       {group.icon}
@@ -146,11 +150,10 @@ export default function AdminSidebar() {
                           <Link
                             key={item.href}
                             href={item.href}
-                            className={`flex items-center gap-3 px-4 py-2 text-sm rounded-lg transition-colors ${
-                              isActive
+                            className={`flex items-center gap-3 px-4 py-2 text-sm rounded-lg transition-colors ${isActive
                                 ? 'text-blue-700 bg-blue-50 font-medium'
                                 : 'text-gray-700 hover:bg-gray-50'
-                            }`}
+                              }`}
                           >
                             {item.icon}
                             {item.label}
@@ -164,11 +167,10 @@ export default function AdminSidebar() {
                 // Single Item (no dropdown)
                 <Link
                   href={group.items[0].href}
-                  className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-colors font-medium group ${
-                    firstItemActive
+                  className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-colors font-medium group ${firstItemActive
                       ? 'bg-blue-50 text-blue-700'
                       : 'text-gray-700 hover:bg-gray-50'
-                  }`}
+                    }`}
                 >
                   <span className={`${firstItemActive ? 'text-blue-600' : 'text-gray-600 group-hover:text-blue-600'}`}>
                     {group.icon}
