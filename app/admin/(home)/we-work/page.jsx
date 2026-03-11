@@ -1,4 +1,4 @@
-import WeWorkManager from "../../../components/Home/WeWork/WeWorkManager";
+import WeWorkManager from "../../../../components/Home/WeWork/WeWorkManager";
 
 export default function WeWorkPage() {
   return (

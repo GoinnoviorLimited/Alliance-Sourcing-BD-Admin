@@ -1,4 +1,4 @@
-import BuyingHouseManager from "../../../components/Home/BuyingHouse/BuyingHouseManager";
+import BuyingHouseManager from "../../../../components/Home/BuyingHouse/BuyingHouseManager";
 
 export default function BuyingHousePage() {
   return (

@@ -63,6 +63,11 @@ const defaultNavGroups: NavGroup[] = [
         label: 'Buying House',
         href: '/admin/buying-house',
         icon: <span className="w-2 h-2 bg-blue-400 rounded-full"></span>,
+      },
+      {
+        label: 'Established Excellence',
+        href: '/admin/established-excellence',
+        icon: <span className="w-2 h-2 bg-purple-400 rounded-full"></span>,
       }
     ],
   },

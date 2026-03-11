@@ -1,4 +1,4 @@
-import ApartManager from "../../../components/Home/Apart/ApartManager";
+import ApartManager from "../../../../components/Home/Apart/ApartManager";
 
 export default function ApartPage() {
   return (

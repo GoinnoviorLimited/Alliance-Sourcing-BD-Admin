@@ -25,3 +25,7 @@ export const useBuyingHouseData = () => {
   return { data, error, isLoading: !data && !error, mutate };
 }
 
+export const useEstablishedExcellenceData = () => {
+  const { data, error, mutate } = useSWR(`${API_URL}/api/established-excellence`, fetcher);
+  return { data, error, isLoading: !data && !error, mutate };
+}
