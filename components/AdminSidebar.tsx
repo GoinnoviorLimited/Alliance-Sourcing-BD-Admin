@@ -54,6 +54,11 @@ const defaultNavGroups: NavGroup[] = [
         href: '/admin/we-work',
         icon: <span className="w-2 h-2 bg-green-400 rounded-full"></span>,
       },
+      {
+        label: 'Apart',
+        href: '/admin/apart',
+        icon: <span className="w-2 h-2 bg-green-400 rounded-full"></span>,
+      },
     ],
   },
 ]

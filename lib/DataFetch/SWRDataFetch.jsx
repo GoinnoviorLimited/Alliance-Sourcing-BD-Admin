@@ -14,3 +14,8 @@ export const useWeWorkData = () => {
   const { data, error, mutate } = useSWR(`${API_URL}/api/we-work`, fetcher);
   return { data, error, isLoading: !data && !error, mutate };
 }
+
+export const useApartData = () => {
+  const { data, error, mutate } = useSWR(`${API_URL}/api/apart`, fetcher);
+  return { data, error, isLoading: !data && !error, mutate };
+}
