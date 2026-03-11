@@ -64,7 +64,7 @@ const defaultNavGroups: NavGroup[] = [
         href: '/admin/buying-house',
         icon: <span className="w-2 h-2 bg-blue-400 rounded-full"></span>,
       },
-      
+
     ],
   },
   {
@@ -87,7 +87,31 @@ const defaultNavGroups: NavGroup[] = [
       }
     ],
   },
-  ,
+  {
+    label: 'Factory Machinery',
+    icon: (
+      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-3m0 0l7-4 7 4M5 9v10a1 1 0 001 1h12a1 1 0 001-1V9m-9 11l4-4m0 0l4 4m-4-4V3" />
+      </svg>
+    ),
+    items: [
+      {
+        label: 'Advance Machinery',
+        href: '/admin/advance-machinery',
+        icon: <span className="w-2 h-2 bg-purple-400 rounded-full"></span>,
+      },
+      {
+        label: 'Factory Info',
+        href: '/admin/factory-info',
+        icon: <span className="w-2 h-2 bg-purple-400 rounded-full"></span>,
+      },
+      {
+        label: 'Machinery Inventory',
+        href: '/admin/machinery-inventory',
+        icon: <span className="w-2 h-2 bg-purple-400 rounded-full"></span>,
+      },
+    ],
+  },
   {
     label: 'Contact',
     icon: (
