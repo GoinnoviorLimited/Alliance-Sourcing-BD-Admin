@@ -39,3 +39,13 @@ export const useAdvanceMachineryData = () => {
   const { data, error, mutate } = useSWR(`${API_URL}/api/advance-machinery`, fetcher);
   return { data, error, isLoading: !data && !error, mutate };
 }
+
+export const useMachineryInventoryData = () => {
+  const { data, error, mutate } = useSWR(`${API_URL}/api/machinery-inventory`, fetcher);
+  return { data, error, isLoading: !data && !error, mutate };
+}
+
+export const useFactoryInfoData = () => {
+  const { data, error, mutate } = useSWR(`${API_URL}/api/factory-info`, fetcher);
+  return { data, error, isLoading: !data && !error, mutate };
+}
