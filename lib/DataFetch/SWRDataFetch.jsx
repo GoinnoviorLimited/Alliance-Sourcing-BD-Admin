@@ -49,3 +49,8 @@ export const useFactoryInfoData = () => {
   const { data, error, mutate } = useSWR(`${API_URL}/api/factory-info`, fetcher);
   return { data, error, isLoading: !data && !error, mutate };
 }
+
+export const useProductsData = () => {
+  const { data, error, mutate } = useSWR(`${API_URL}/api/products`, fetcher);
+  return { data, error, isLoading: !data && !error, mutate };
+}
