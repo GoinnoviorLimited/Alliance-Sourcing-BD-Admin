@@ -48,13 +48,6 @@ export default function WeWorkList({ items, onEdit, onDelete, isDeleting }) {
                   </svg>
                 </div>
               )}
-              
-              {/* Cloudinary Badge - Repositioned for circular image */}
-              {item.image?.includes('cloudinary') && (
-                <div className="absolute bottom-0 right-0 bg-blue-500 text-white text-[10px] px-1.5 py-0.5 rounded-full border-2 border-white">
-                  CDN
-                </div>
-              )}
             </div>
           </div>
 
