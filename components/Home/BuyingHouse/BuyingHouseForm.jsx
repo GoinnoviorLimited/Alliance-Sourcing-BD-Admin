@@ -1,118 +1,53 @@
-// components/admin/BuyingHouseForm.jsx
 "use client";
-import { useState, useRef, useEffect } from "react";
+import { useState, useEffect } from "react";
+import PhotoUpload from "../../ui/PhoneUpload";
 
-// Comprehensive emoji options for buying house context
-const EMOJI_OPTIONS = [
-  // Search & Discovery
-  { emoji: "🔍", label: "Search", category: "Discovery" },
-  { emoji: "🔎", label: "Magnifying Glass", category: "Discovery" },
-  { emoji: "🎯", label: "Target", category: "Discovery" },
-  { emoji: "📍", label: "Location", category: "Discovery" },
-  
-  // Evaluation & Quality
-  { emoji: "⭐", label: "Star", category: "Quality" },
-  { emoji: "✅", label: "Check Mark", category: "Quality" },
-  { emoji: "📊", label: "Analytics", category: "Quality" },
-  { emoji: "📈", label: "Growth", category: "Quality" },
-  { emoji: "🏆", label: "Trophy", category: "Quality" },
-  { emoji: "💎", label: "Diamond", category: "Quality" },
-  
-  // Suppliers & Manufacturing
-  { emoji: "🏭", label: "Factory", category: "Manufacturing" },
-  { emoji: "🔧", label: "Tools", category: "Manufacturing" },
-  { emoji: "⚙️", label: "Gear", category: "Manufacturing" },
-  { emoji: "🔨", label: "Hammer", category: "Manufacturing" },
-  { emoji: "🏗️", label: "Construction", category: "Manufacturing" },
-  
-  // Partnership & Trust
-  { emoji: "🤝", label: "Handshake", category: "Partnership" },
-  { emoji: "💼", label: "Briefcase", category: "Partnership" },
-  { emoji: "💪", label: "Strength", category: "Partnership" },
-  
-  // Values & Ethics
-  { emoji: "🌱", label: "Sustainability", category: "Values" },
-  { emoji: "🌍", label: "Global", category: "Values" },
-  { emoji: "💚", label: "Green Heart", category: "Values" },
-  
-  // Communication
-  { emoji: "💬", label: "Chat", category: "Communication" },
-  { emoji: "📞", label: "Phone", category: "Communication" },
-  { emoji: "📧", label: "Email", category: "Communication" },
-  
-  // Logistics
-  { emoji: "🚚", label: "Delivery", category: "Logistics" },
-  { emoji: "📦", label: "Package", category: "Logistics" },
-  { emoji: "✈️", label: "Airplane", category: "Logistics" },
-  
-  // Innovation
-  { emoji: "💡", label: "Idea", category: "Innovation" },
-  { emoji: "🚀", label: "Rocket", category: "Innovation" },
-  { emoji: "✨", label: "Sparkle", category: "Innovation" },
-  
-  // Business
-  { emoji: "💰", label: "Money", category: "Business" },
-  { emoji: "💳", label: "Credit Card", category: "Business" },
-  { emoji: "📋", label: "Clipboard", category: "Business" },
-];
-
-// Group emojis by category
-const groupedEmojis = EMOJI_OPTIONS.reduce((acc, emoji) => {
-  if (!acc[emoji.category]) {
-    acc[emoji.category] = [];
-  }
-  acc[emoji.category].push(emoji);
-  return acc;
-}, {});
-
-export default function BuyingHouseForm({ initialData, onSubmit, onCancel }) {
+export default function BuyingHouseForm({ initialData, onSubmit, onCancel, isSubmitting }) {
   const [formData, setFormData] = useState({
-    title: initialData?.title || "",
-    description: initialData?.description || "",
-    icon: initialData?.icon || "",
+    title: "",
+    description: "",
+    image: "",
   });
 
   const [errors, setErrors] = useState({});
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [searchTerm, setSearchTerm] = useState("");
-  
-  const dropdownRef = useRef(null);
-  const buttonRef = useRef(null);
+  const [modifiedFields, setModifiedFields] = useState({});
 
-  // Close dropdown when clicking outside
+  // Initialize form with initial data
   useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (
-        dropdownRef.current && 
-        !dropdownRef.current.contains(event.target) &&
-        !buttonRef.current.contains(event.target)
-      ) {
-        setIsDropdownOpen(false);
-      }
-    };
-
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, []);
+    if (initialData) {
+      setFormData({
+        title: initialData.title || "",
+        description: initialData.description || "",
+        image: initialData.image || "",
+      });
+      setModifiedFields({});
+    }
+  }, [initialData]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
     
-    // Clear error for this field
+    setModifiedFields((prev) => ({
+      ...prev,
+      [name]: value !== initialData?.[name]
+    }));
+    
     if (errors[name]) {
       setErrors((prev) => ({ ...prev, [name]: "" }));
     }
   };
 
-  const handleEmojiSelect = (emoji) => {
-    setFormData((prev) => ({ ...prev, icon: emoji }));
-    setIsDropdownOpen(false);
-    setSearchTerm("");
-    if (errors.icon) {
-      setErrors((prev) => ({ ...prev, icon: "" }));
+  const handleImageChange = (imageUrl) => {
+    setFormData((prev) => ({ ...prev, image: imageUrl }));
+    
+    setModifiedFields((prev) => ({
+      ...prev,
+      image: imageUrl !== initialData?.image
+    }));
+    
+    if (errors.image) {
+      setErrors((prev) => ({ ...prev, image: "" }));
     }
   };
 
@@ -131,8 +66,8 @@ export default function BuyingHouseForm({ initialData, onSubmit, onCancel }) {
       newErrors.description = "Description must be at least 10 characters";
     }
     
-    if (!formData.icon) {
-      newErrors.icon = "Icon is required";
+    if (!formData.image) {
+      newErrors.image = "Image is required";
     }
 
     setErrors(newErrors);
@@ -147,21 +82,13 @@ export default function BuyingHouseForm({ initialData, onSubmit, onCancel }) {
     }
   };
 
-  // Filter emojis based on search term
-  const filteredGroupedEmojis = searchTerm
-    ? Object.entries(groupedEmojis).reduce((acc, [category, emojis]) => {
-        const filtered = emojis.filter(
-          (e) => 
-            e.label.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            e.emoji.includes(searchTerm) ||
-            category.toLowerCase().includes(searchTerm.toLowerCase())
-        );
-        if (filtered.length > 0) {
-          acc[category] = filtered;
-        }
-        return acc;
-      }, {})
-    : groupedEmojis;
+  const hasChanges = Object.values(modifiedFields).some(value => value === true);
+
+  const getFieldStyle = (fieldName) => {
+    if (errors[fieldName]) return "border-red-500";
+    if (modifiedFields[fieldName]) return "border-yellow-500 bg-yellow-50";
+    return "border-gray-300";
+  };
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
@@ -176,13 +103,15 @@ export default function BuyingHouseForm({ initialData, onSubmit, onCancel }) {
           name="title"
           value={formData.title}
           onChange={handleChange}
-          className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-            errors.title ? "border-red-500" : "border-gray-300"
-          }`}
+          disabled={isSubmitting}
+          className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${getFieldStyle("title")}`}
           placeholder="e.g., Supplier Selection & Evaluation"
         />
         {errors.title && (
           <p className="mt-1 text-sm text-red-600">{errors.title}</p>
+        )}
+        {modifiedFields.title && !errors.title && (
+          <p className="mt-1 text-xs text-yellow-600">✓ Modified</p>
         )}
         <p className="mt-1 text-xs text-gray-500">
           {formData.title.length}/100 characters
@@ -199,158 +128,70 @@ export default function BuyingHouseForm({ initialData, onSubmit, onCancel }) {
           name="description"
           value={formData.description}
           onChange={handleChange}
+          disabled={isSubmitting}
           rows={4}
-          className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-            errors.description ? "border-red-500" : "border-gray-300"
-          }`}
+          className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${getFieldStyle("description")}`}
           placeholder="Enter detailed description"
         />
         {errors.description && (
           <p className="mt-1 text-sm text-red-600">{errors.description}</p>
+        )}
+        {modifiedFields.description && !errors.description && (
+          <p className="mt-1 text-xs text-yellow-600">✓ Modified</p>
         )}
         <p className="mt-1 text-xs text-gray-500">
           {formData.description.length}/500 characters
         </p>
       </div>
 
-      {/* Icon Selection with Fixed Dropdown */}
-      <div className="relative">
-        <label htmlFor="icon" className="block text-sm font-medium text-gray-700 mb-1">
-          Icon <span className="text-red-600">*</span>
-        </label>
-        
-        {/* Selected Icon Display - acts as dropdown toggle */}
-        <div className="flex items-center gap-4 mb-2">
-          <button
-            type="button"
-            ref={buttonRef}
-            onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-            className={`w-20 h-20 rounded-xl border-2 flex items-center justify-center text-5xl cursor-pointer transition-all ${
-              formData.icon 
-                ? "border-blue-500 bg-blue-50 shadow-md" 
-                : "border-gray-300 hover:border-gray-400 bg-gray-50"
-            }`}
-          >
-            {formData.icon || "?"}
-          </button>
-          <div className="flex-1 text-left">
-            <p className="text-sm font-medium text-gray-700">
-              {formData.icon ? "Selected Icon" : "No Icon Selected"}
-            </p>
-            <p className="text-sm text-gray-500">
-              {formData.icon 
-                ? `Click the icon to change`
-                : "Click the box to select an icon"}
-            </p>
-          </div>
-        </div>
-
-        {/* Dropdown Menu */}
-        {isDropdownOpen && (
-          <div 
-            ref={dropdownRef}
-            className="absolute z-50 mt-2 w-full bg-white rounded-lg shadow-xl border border-gray-200"
-            style={{ maxHeight: '400px', overflow: 'hidden', display: 'flex', flexDirection: 'column' }}
-          >
-            {/* Search Bar - Fixed at top */}
-            <div className="p-3 border-b bg-white">
-              <div className="relative">
-                <input
-                  type="text"
-                  placeholder="Search icons..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-full px-3 py-2 pl-8 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
-                  autoFocus
-                />
-                <svg
-                  className="absolute left-2.5 top-2.5 h-4 w-4 text-gray-400"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                </svg>
-              </div>
-            </div>
-
-            {/* Emoji Grid - Scrollable area */}
-            <div className="overflow-y-auto p-3" style={{ maxHeight: '300px' }}>
-              {Object.entries(filteredGroupedEmojis).length > 0 ? (
-                Object.entries(filteredGroupedEmojis).map(([category, emojis]) => (
-                  <div key={category} className="mb-4">
-                    <h4 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2 sticky top-0 bg-white py-1">
-                      {category} ({emojis.length})
-                    </h4>
-                    <div className="grid grid-cols-8 gap-1">
-                      {emojis.map((item) => (
-                        <button
-                          key={item.emoji + item.label}
-                          type="button"
-                          onClick={() => handleEmojiSelect(item.emoji)}
-                          className={`p-2 text-xl hover:bg-blue-50 rounded transition-all ${
-                            formData.icon === item.emoji 
-                              ? "bg-blue-100 ring-1 ring-blue-500" 
-                              : "hover:scale-110"
-                          }`}
-                          title={item.label}
-                        >
-                          {item.emoji}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-                ))
-              ) : (
-                <div className="text-center py-8">
-                  <p className="text-gray-500">No icons found for "{searchTerm}"</p>
-                </div>
-              )}
-            </div>
-
-            {/* Custom Emoji Input - Fixed at bottom */}
-            <div className="p-3 border-t bg-gray-50">
-              <label className="block text-xs font-medium text-gray-600 mb-1">
-                Or paste custom emoji
-              </label>
-              <div className="flex gap-2">
-                <input
-                  type="text"
-                  placeholder="Paste emoji here"
-                  onChange={(e) => {
-                    const emoji = e.target.value;
-                    // Check if it's an emoji
-                    if (emoji && /\p{Emoji}/u.test(emoji)) {
-                      handleEmojiSelect(emoji);
-                    }
-                  }}
-                  className="flex-1 px-2 py-1 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500"
-                />
-              </div>
-            </div>
-          </div>
-        )}
-
-        {errors.icon && (
-          <p className="mt-1 text-sm text-red-600">{errors.icon}</p>
-        )}
-      </div>
+      {/* Image Upload */}
+      <PhotoUpload
+        name="image"
+        label="Buying House Image"
+        required={true}
+        value={formData.image}
+        onChange={handleImageChange}
+        error={errors.image}
+        disabled={isSubmitting}
+      />
+      {modifiedFields.image && !errors.image && (
+        <p className="mt-1 text-xs text-yellow-600">✓ Image modified</p>
+      )}
 
       {/* Form Actions */}
       <div className="flex justify-end gap-3 pt-4 border-t">
         <button
           type="button"
           onClick={onCancel}
-          className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 transition-colors"
+          disabled={isSubmitting}
+          className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 transition-colors disabled:opacity-50"
         >
           Cancel
         </button>
         <button
           type="submit"
-          className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+          disabled={isSubmitting || !hasChanges}
+          className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
         >
-          {initialData ? "Update" : "Create"} Item
+          {isSubmitting ? (
+            <>
+              <svg className="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+              </svg>
+              Saving...
+            </>
+          ) : (
+            initialData ? "Update Item" : "Create Item"
+          )}
         </button>
+      </div>
+
+      {/* Status Indicator */}
+      <div className="text-xs text-gray-400 flex justify-end">
+        <span className={hasChanges ? "text-yellow-600" : "text-gray-400"}>
+          {hasChanges ? "⚠️ Unsaved changes" : "✓ All changes saved"}
+        </span>
       </div>
     </form>
   );

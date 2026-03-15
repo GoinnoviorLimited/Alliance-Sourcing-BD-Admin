@@ -1,3 +1,4 @@
+import { Images } from "lucide-react";
 import mongoose, { Schema } from "mongoose";
 
 //Hero Section
@@ -101,7 +102,7 @@ const BuyingHouseSchema = new mongoose.Schema(
       required: true,
       trim: true
     },
-    icon: {
+    image: {
       type: String,
       required: true,
       trim: true

@@ -1,4 +1,3 @@
-// components/admin/BuyingHouseManager.jsx
 "use client";
 import { useState } from "react";
 import { useBuyingHouseData } from "../../../lib/DataFetch/SWRDataFetch";
