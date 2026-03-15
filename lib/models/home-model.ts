@@ -47,7 +47,7 @@ const heroSectionSchema = new Schema(
 //Apart section
 const ApartSchema = new mongoose.Schema(
   {
-    icons: {
+    image: {
       type: String,
       required: true,
       trim: true,

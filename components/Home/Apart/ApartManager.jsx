@@ -1,4 +1,3 @@
-// components/admin/ApartManager.jsx
 "use client";
 import { useState } from "react";
 import { useApartData } from "../../../lib/DataFetch/SWRDataFetch";
