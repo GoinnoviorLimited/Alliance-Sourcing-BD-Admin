@@ -2,10 +2,10 @@
 import { useState, useEffect } from "react";
 import PhotoUpload from "../ui/PhoneUpload";
 
-// Predefined categories for suggestions
+// Predefined categories for initial suggestions
 const PREDEFINED_CATEGORIES = [
   "Knitwear",
-  "Woven",
+  "Woven", 
   "Sweater",
   "Denim",
   "Sportswear",
@@ -50,18 +50,25 @@ export default function ProductsForm({
   const [customSubcategory, setCustomSubcategory] = useState("");
   const [showCustomCategory, setShowCustomCategory] = useState(false);
   const [showCustomSubcategory, setShowCustomSubcategory] = useState(false);
-
-  // Get unique categories and subcategories from existing data and predefined
-  const allCategories = [...new Set([...PREDEFINED_CATEGORIES, ...existingCategories])].sort();
   
-  // Get subcategory suggestions based on selected category
-  const getSubcategorySuggestions = () => {
-    const suggestions = SUBCATEGORY_SUGGESTIONS[formData.category] || [];
-    const existing = existingSubcategories.filter(sub => 
-      !suggestions.includes(sub) && sub.toLowerCase().includes(formData.category?.toLowerCase() || '')
-    );
-    return [...new Set([...suggestions, ...existing])].sort();
-  };
+  // State for database categories
+  const [dbCategories, setDbCategories] = useState([]);
+  const [loadingCategories, setLoadingCategories] = useState(false);
+  const [subcategoriesForSelected, setSubcategoriesForSelected] = useState([]);
+
+  // Fetch categories from database on mount
+  useEffect(() => {
+    fetchCategoriesFromDB();
+  }, []);
+
+  // Fetch subcategories when category changes
+  useEffect(() => {
+    if (formData.category) {
+      fetchSubcategoriesFromDB(formData.category);
+    } else {
+      setSubcategoriesForSelected([]);
+    }
+  }, [formData.category]);
 
   // Initialize form with initial data
   useEffect(() => {
@@ -74,6 +81,70 @@ export default function ProductsForm({
       });
     }
   }, [initialData]);
+
+  const fetchCategoriesFromDB = async () => {
+    setLoadingCategories(true);
+    try {
+      const response = await fetch('/api/categories');
+      const data = await response.json();
+      if (data.success) {
+        setDbCategories(data.data);
+      }
+    } catch (error) {
+      console.error('Error fetching categories:', error);
+    } finally {
+      setLoadingCategories(false);
+    }
+  };
+
+  const fetchSubcategoriesFromDB = async (categoryName) => {
+    try {
+      const response = await fetch(`/api/categories?category=${encodeURIComponent(categoryName)}`);
+      const data = await response.json();
+      if (data.success && data.data.length > 0) {
+        // Extract subcategory names from the category document
+        const subs = data.data[0].subcategories.map(sub => sub.name);
+        setSubcategoriesForSelected(subs);
+      } else {
+        setSubcategoriesForSelected([]);
+      }
+    } catch (error) {
+      console.error('Error fetching subcategories:', error);
+      setSubcategoriesForSelected([]);
+    }
+  };
+
+  // Combine predefined categories with database categories
+  const getAllCategories = () => {
+    const dbCategoryNames = dbCategories.map(cat => cat.name);
+    // Create a Set to remove duplicates (case insensitive)
+    const allCats = new Set();
+    
+    // Add predefined categories
+    PREDEFINED_CATEGORIES.forEach(cat => allCats.add(cat));
+    
+    // Add database categories (if not already in predefined)
+    dbCategoryNames.forEach(cat => allCats.add(cat));
+    
+    // Add existing categories from props
+    existingCategories.forEach(cat => allCats.add(cat));
+    
+    return Array.from(allCats).sort();
+  };
+
+  // Get subcategory suggestions combining predefined and database
+  const getSubcategorySuggestions = () => {
+    const predefined = SUBCATEGORY_SUGGESTIONS[formData.category] || [];
+    const fromDB = subcategoriesForSelected || [];
+    const fromExisting = existingSubcategories.filter(sub => 
+      !predefined.includes(sub) && 
+      !fromDB.includes(sub) &&
+      sub.toLowerCase().includes(formData.category?.toLowerCase() || '')
+    );
+    
+    // Combine all sources and remove duplicates
+    return [...new Set([...predefined, ...fromDB, ...fromExisting])].sort();
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -96,19 +167,56 @@ export default function ProductsForm({
     }
   };
 
-  const addCustomCategory = () => {
+  const addCustomCategory = async () => {
     if (customCategory.trim()) {
-      setFormData(prev => ({ ...prev, category: customCategory.trim() }));
+      const trimmedCategory = customCategory.trim();
+      
+      // Optimistically update UI
+      setFormData(prev => ({ ...prev, category: trimmedCategory }));
       setCustomCategory("");
       setShowCustomCategory(false);
+      
+      // Optionally pre-create the category in database
+      try {
+        await fetch('/api/categories', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name: trimmedCategory })
+        });
+        // Refresh categories list
+        fetchCategoriesFromDB();
+      } catch (error) {
+        console.error('Error creating category:', error);
+        // Still continue - the product creation will handle it
+      }
     }
   };
 
-  const addCustomSubcategory = () => {
-    if (customSubcategory.trim()) {
-      setFormData(prev => ({ ...prev, subcategory: customSubcategory.trim() }));
+  const addCustomSubcategory = async () => {
+    if (customSubcategory.trim() && formData.category) {
+      const trimmedSubcategory = customSubcategory.trim();
+      
+      // Optimistically update UI
+      setFormData(prev => ({ ...prev, subcategory: trimmedSubcategory }));
       setCustomSubcategory("");
       setShowCustomSubcategory(false);
+      
+      // Optionally pre-create the subcategory in database
+      try {
+        await fetch('/api/categories', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ 
+            name: formData.category,
+            subcategory: trimmedSubcategory 
+          })
+        });
+        // Refresh subcategories for this category
+        fetchSubcategoriesFromDB(formData.category);
+      } catch (error) {
+        console.error('Error creating subcategory:', error);
+        // Still continue - the product creation will handle it
+      }
     }
   };
 
@@ -129,6 +237,8 @@ export default function ProductsForm({
     
     if (!formData.imageURL) {
       newErrors.imageURL = "Product image is required";
+    } else if (!formData.imageURL.startsWith('http')) {
+      newErrors.imageURL = "Please upload a valid image";
     }
 
     setErrors(newErrors);
@@ -142,6 +252,9 @@ export default function ProductsForm({
       onSubmit(formData);
     }
   };
+
+  const allCategories = getAllCategories();
+  const subcategorySuggestions = getSubcategorySuggestions();
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
@@ -158,12 +271,14 @@ export default function ProductsForm({
               name="category"
               value={formData.category}
               onChange={handleChange}
-              disabled={isSubmitting}
+              disabled={isSubmitting || loadingCategories}
               className={`flex-1 px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${
                 errors.category ? "border-red-500" : "border-gray-300"
-              }`}
+              } ${loadingCategories ? "bg-gray-100" : ""}`}
             >
-              <option value="">Select a category</option>
+              <option value="">
+                {loadingCategories ? "Loading categories..." : "Select a category"}
+              </option>
               {allCategories.map((category) => (
                 <option key={category} value={category}>
                   {category}
@@ -175,6 +290,7 @@ export default function ProductsForm({
               onClick={() => setShowCustomCategory(true)}
               className="px-3 py-2 bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200 transition-colors"
               title="Add custom category"
+              disabled={isSubmitting}
             >
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
@@ -190,11 +306,13 @@ export default function ProductsForm({
               placeholder="Enter custom category"
               className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               autoFocus
+              disabled={isSubmitting}
             />
             <button
               type="button"
               onClick={addCustomCategory}
-              className="px-3 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors"
+              className="px-3 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors disabled:opacity-50"
+              disabled={isSubmitting || !customCategory.trim()}
             >
               Add
             </button>
@@ -202,6 +320,7 @@ export default function ProductsForm({
               type="button"
               onClick={() => setShowCustomCategory(false)}
               className="px-3 py-2 bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200 transition-colors"
+              disabled={isSubmitting}
             >
               Cancel
             </button>
@@ -210,6 +329,13 @@ export default function ProductsForm({
         
         {errors.category && (
           <p className="mt-1 text-sm text-red-600">{errors.category}</p>
+        )}
+        
+        {/* Category suggestions hint */}
+        {!showCustomCategory && !formData.category && (
+          <p className="mt-1 text-xs text-gray-500">
+            Can't find your category? Click the + button to add a custom one
+          </p>
         )}
       </div>
 
@@ -229,12 +355,16 @@ export default function ProductsForm({
               disabled={isSubmitting || !formData.category}
               className={`flex-1 px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${
                 errors.subcategory ? "border-red-500" : "border-gray-300"
-              } ${!formData.category ? "bg-gray-100" : ""}`}
+              } ${!formData.category ? "bg-gray-100 cursor-not-allowed" : ""}`}
             >
               <option value="">
-                {formData.category ? "Select a subcategory" : "Select a category first"}
+                {formData.category 
+                  ? subcategorySuggestions.length > 0 
+                    ? "Select a subcategory" 
+                    : "No subcategories found" 
+                  : "Select a category first"}
               </option>
-              {getSubcategorySuggestions().map((subcategory) => (
+              {subcategorySuggestions.map((subcategory) => (
                 <option key={subcategory} value={subcategory}>
                   {subcategory}
                 </option>
@@ -246,6 +376,7 @@ export default function ProductsForm({
                 onClick={() => setShowCustomSubcategory(true)}
                 className="px-3 py-2 bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200 transition-colors"
                 title="Add custom subcategory"
+                disabled={isSubmitting}
               >
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
@@ -262,11 +393,13 @@ export default function ProductsForm({
               placeholder="Enter custom subcategory"
               className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               autoFocus
+              disabled={isSubmitting}
             />
             <button
               type="button"
               onClick={addCustomSubcategory}
-              className="px-3 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors"
+              className="px-3 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors disabled:opacity-50"
+              disabled={isSubmitting || !customSubcategory.trim()}
             >
               Add
             </button>
@@ -274,6 +407,7 @@ export default function ProductsForm({
               type="button"
               onClick={() => setShowCustomSubcategory(false)}
               className="px-3 py-2 bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200 transition-colors"
+              disabled={isSubmitting}
             >
               Cancel
             </button>
@@ -282,6 +416,13 @@ export default function ProductsForm({
         
         {errors.subcategory && (
           <p className="mt-1 text-sm text-red-600">{errors.subcategory}</p>
+        )}
+        
+        {/* Subcategory suggestions hint */}
+        {!showCustomSubcategory && formData.category && subcategorySuggestions.length === 0 && (
+          <p className="mt-1 text-xs text-gray-500">
+            No existing subcategories found. Click the + button to add a custom one
+          </p>
         )}
       </div>
 
@@ -331,7 +472,7 @@ export default function ProductsForm({
         <button
           type="submit"
           disabled={isSubmitting}
-          className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors disabled:opacity-50 flex items-center gap-2"
+          className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors disabled:opacity-50 flex items-center gap-2 min-w-[120px] justify-center"
         >
           {isSubmitting ? (
             <>
@@ -339,12 +480,23 @@ export default function ProductsForm({
                 <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                 <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
               </svg>
-              Saving...
+              <span>Saving...</span>
             </>
           ) : (
             initialData ? "Update Product" : "Add Product"
           )}
         </button>
+      </div>
+
+      {/* Smart Features Note */}
+      <div className="text-xs text-gray-400 bg-gray-50 p-3 rounded-md">
+        <p className="font-medium text-gray-600 mb-1">✨ Smart Category Management:</p>
+        <ul className="list-disc list-inside space-y-1">
+          <li>Categories and subcategories are automatically saved to the database</li>
+          <li>New categories will be created automatically when you add products</li>
+          <li>Existing categories show all previously used subcategories</li>
+          <li>Predefined suggestions help maintain consistency</li>
+        </ul>
       </div>
     </form>
   );

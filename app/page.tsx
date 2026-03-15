@@ -34,7 +34,7 @@ export default function LoginPage() {
       // Redirect to admin
       setTimeout(() => {
         router.push('/admin')
-      }, 500)
+      }, 10)
     } else {
       setError('Password must be at least 6 characters')
       setLoading(false)
