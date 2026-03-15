@@ -2,25 +2,10 @@
 import { useState } from "react";
 import PhotoUpload from "../../ui/PhoneUpload";
 
-// Predefined icon options
-const ICON_OPTIONS = [
-  { value: "supplier", label: "Supplier", emoji: "🏭" },
-  { value: "handshake", label: "Handshake", emoji: "🤝" },
-  { value: "factory", label: "Factory", emoji: "🏭" },
-  { value: "quality", label: "Quality", emoji: "⭐" },
-  { value: "delivery", label: "Delivery", emoji: "🚚" },
-  { value: "support", label: "Support", emoji: "💬" },
-  { value: "innovation", label: "Innovation", emoji: "💡" },
-  { value: "sustainability", label: "Sustainability", emoji: "🌱" },
-  { value: "global", label: "Global", emoji: "🌍" },
-  { value: "partnership", label: "Partnership", emoji: "🤝" },
-];
-
 export default function WeWorkForm({ initialData, onSubmit, onCancel }) {
   const [formData, setFormData] = useState({
     title: initialData?.title || "",
     description: initialData?.description || "",
-    icon: initialData?.icon || "",
     image: initialData?.image || "",
   });
 
@@ -29,8 +14,6 @@ export default function WeWorkForm({ initialData, onSubmit, onCancel }) {
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
-    
-    // Clear error for this field
     if (errors[name]) {
       setErrors((prev) => ({ ...prev, [name]: "" }));
     }
@@ -45,30 +28,16 @@ export default function WeWorkForm({ initialData, onSubmit, onCancel }) {
 
   const validateForm = () => {
     const newErrors = {};
-    
-    if (!formData.title.trim()) {
-      newErrors.title = "Title is required";
-    }
-    if (!formData.description.trim()) {
-      newErrors.description = "Description is required";
-    }
-    if (!formData.icon) {
-      newErrors.icon = "Icon is required";
-    }
-    if (!formData.image) {
-      newErrors.image = "Image is required";
-    }
-
+    if (!formData.title.trim()) newErrors.title = "Title is required";
+    if (!formData.description.trim()) newErrors.description = "Description is required";
+    if (!formData.image) newErrors.image = "Image is required";
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    
-    if (validateForm()) {
-      onSubmit(formData);
-    }
+    if (validateForm()) onSubmit(formData);
   };
 
   return (
@@ -87,7 +56,7 @@ export default function WeWorkForm({ initialData, onSubmit, onCancel }) {
           className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${
             errors.title ? "border-red-500" : "border-gray-300"
           }`}
-          placeholder="e.g., Supplier Match"
+          placeholder="e.g., Consultation"
         />
         {errors.title && (
           <p className="mt-1 text-sm text-red-600">{errors.title}</p>
@@ -108,55 +77,17 @@ export default function WeWorkForm({ initialData, onSubmit, onCancel }) {
           className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${
             errors.description ? "border-red-500" : "border-gray-300"
           }`}
-          placeholder="Enter description"
+          placeholder="We listen to your needs and understand your specifications"
         />
         {errors.description && (
           <p className="mt-1 text-sm text-red-600">{errors.description}</p>
         )}
       </div>
 
-      {/* Icon Selection */}
-      <div>
-        <label htmlFor="icon" className="block text-sm font-medium text-gray-700 mb-1">
-          Icon <span className="text-red-600">*</span>
-        </label>
-        <select
-          id="icon"
-          name="icon"
-          value={formData.icon}
-          onChange={handleChange}
-          className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-            errors.icon ? "border-red-500" : "border-gray-300"
-          }`}
-        >
-          <option value="">Select an icon</option>
-          {ICON_OPTIONS.map((option) => (
-            <option key={option.value} value={option.value}>
-              {option.emoji} {option.label}
-            </option>
-          ))}
-        </select>
-        {errors.icon && (
-          <p className="mt-1 text-sm text-red-600">{errors.icon}</p>
-        )}
-        
-        {/* Icon Preview */}
-        {formData.icon && (
-          <div className="mt-2 p-2 bg-gray-50 rounded-md inline-flex items-center gap-2">
-            <span className="text-2xl">
-              {ICON_OPTIONS.find(opt => opt.value === formData.icon)?.emoji}
-            </span>
-            <span className="text-sm text-gray-600">
-              Selected: {ICON_OPTIONS.find(opt => opt.value === formData.icon)?.label}
-            </span>
-          </div>
-        )}
-      </div>
-
       {/* Image Upload */}
       <PhotoUpload
         name="image"
-        label="Process Image"
+        label="Profile Image"
         required={true}
         value={formData.image}
         onChange={handleImageChange}
