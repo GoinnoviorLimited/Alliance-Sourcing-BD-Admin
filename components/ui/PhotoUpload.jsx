@@ -1,18 +1,28 @@
 'use client';
 
-import { useCallback, useState } from "react";
+import { useCallback, useState, useEffect } from "react";
 import { toast } from "sonner";
 
 export default function PhotoUpload({ 
   name, 
   label, 
+  value,
   required = false, 
   onChange,
-  error 
+  error,
+  disabled = false
 }) {
-  const [preview, setPreview] = useState(null);
+  const [preview, setPreview] = useState(value || null);
   const [uploading, setUploading] = useState(false);
   const [dragActive, setDragActive] = useState(false);
+
+  useEffect(() => {
+    if (value) {
+      setPreview(value);
+    } else {
+      setPreview(null);
+    }
+  }, [value]);
 
   const handleFileChange = useCallback(async (file) => {
     if (!file) return;
@@ -99,14 +109,14 @@ export default function PhotoUpload({
         onDragLeave={handleDrag}
         onDragOver={handleDrag}
         onDrop={handleDrop}
-        onClick={() => !uploading && document.getElementById(name)?.click()}
+        onClick={() => !uploading && !disabled && document.getElementById(name)?.click()}
       >
         <input
           id={name}
           type="file"
           accept="image/*"
           className="hidden"
-          disabled={uploading}
+          disabled={uploading || disabled}
           onChange={handleInputChange}
         />
 

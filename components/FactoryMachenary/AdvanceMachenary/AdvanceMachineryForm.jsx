@@ -1,8 +1,13 @@
 "use client";
 import { useState, useEffect } from "react";
-import PhotoUpload from "../../ui/PhoneUpload";
+import PhotoUpload from "../../ui/PhotoUpload";
 
-export default function AdvanceMachineryForm({ initialData, onSubmit, onCancel, isSubmitting }) {
+export default function AdvanceMachineryForm({
+  initialData,
+  onSubmit,
+  onCancel,
+  isSubmitting,
+}) {
   const [formData, setFormData] = useState({
     label: "",
     image: "",
@@ -23,7 +28,7 @@ export default function AdvanceMachineryForm({ initialData, onSubmit, onCancel, 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
-    
+
     if (errors[name]) {
       setErrors((prev) => ({ ...prev, [name]: "" }));
     }
@@ -38,11 +43,11 @@ export default function AdvanceMachineryForm({ initialData, onSubmit, onCancel, 
 
   const validateForm = () => {
     const newErrors = {};
-    
+
     if (!formData.label.trim()) {
       newErrors.label = "Label is required";
     }
-    
+
     if (!formData.image) {
       newErrors.image = "Image is required";
     }
@@ -53,7 +58,7 @@ export default function AdvanceMachineryForm({ initialData, onSubmit, onCancel, 
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    
+
     if (validateForm()) {
       onSubmit(formData);
     }
@@ -63,7 +68,10 @@ export default function AdvanceMachineryForm({ initialData, onSubmit, onCancel, 
     <form onSubmit={handleSubmit} className="space-y-6">
       {/* Label Field */}
       <div>
-        <label htmlFor="label" className="block text-sm font-medium text-gray-700 mb-1">
+        <label
+          htmlFor="label"
+          className="block text-sm font-medium text-gray-700 mb-1"
+        >
           Machinery Label <span className="text-red-600">*</span>
         </label>
         <input
@@ -111,14 +119,32 @@ export default function AdvanceMachineryForm({ initialData, onSubmit, onCancel, 
         >
           {isSubmitting ? (
             <>
-              <svg className="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+              <svg
+                className="animate-spin h-5 w-5 text-white"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+              >
+                <circle
+                  className="opacity-25"
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  strokeWidth="4"
+                ></circle>
+                <path
+                  className="opacity-75"
+                  fill="currentColor"
+                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                ></path>
               </svg>
               Saving...
             </>
+          ) : initialData ? (
+            "Update Machinery"
           ) : (
-            initialData ? "Update Machinery" : "Add Machinery"
+            "Add Machinery"
           )}
         </button>
       </div>

@@ -1,8 +1,13 @@
 "use client";
 import { useState, useEffect } from "react";
-import PhotoUpload from "../../ui/PhoneUpload";
+import PhotoUpload from "../../ui/PhotoUpload";
 
-export default function BuyingHouseForm({ initialData, onSubmit, onCancel, isSubmitting }) {
+export default function BuyingHouseForm({
+  initialData,
+  onSubmit,
+  onCancel,
+  isSubmitting,
+}) {
   const [formData, setFormData] = useState({
     title: "",
     description: "",
@@ -27,12 +32,12 @@ export default function BuyingHouseForm({ initialData, onSubmit, onCancel, isSub
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
-    
+
     setModifiedFields((prev) => ({
       ...prev,
-      [name]: value !== initialData?.[name]
+      [name]: value !== initialData?.[name],
     }));
-    
+
     if (errors[name]) {
       setErrors((prev) => ({ ...prev, [name]: "" }));
     }
@@ -40,12 +45,12 @@ export default function BuyingHouseForm({ initialData, onSubmit, onCancel, isSub
 
   const handleImageChange = (imageUrl) => {
     setFormData((prev) => ({ ...prev, image: imageUrl }));
-    
+
     setModifiedFields((prev) => ({
       ...prev,
-      image: imageUrl !== initialData?.image
+      image: imageUrl !== initialData?.image,
     }));
-    
+
     if (errors.image) {
       setErrors((prev) => ({ ...prev, image: "" }));
     }
@@ -53,19 +58,19 @@ export default function BuyingHouseForm({ initialData, onSubmit, onCancel, isSub
 
   const validateForm = () => {
     const newErrors = {};
-    
+
     if (!formData.title.trim()) {
       newErrors.title = "Title is required";
     } else if (formData.title.length < 3) {
       newErrors.title = "Title must be at least 3 characters";
     }
-    
+
     if (!formData.description.trim()) {
       newErrors.description = "Description is required";
     } else if (formData.description.length < 10) {
       newErrors.description = "Description must be at least 10 characters";
     }
-    
+
     if (!formData.image) {
       newErrors.image = "Image is required";
     }
@@ -76,13 +81,15 @@ export default function BuyingHouseForm({ initialData, onSubmit, onCancel, isSub
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    
+
     if (validateForm()) {
       onSubmit(formData);
     }
   };
 
-  const hasChanges = Object.values(modifiedFields).some(value => value === true);
+  const hasChanges = Object.values(modifiedFields).some(
+    (value) => value === true,
+  );
 
   const getFieldStyle = (fieldName) => {
     if (errors[fieldName]) return "border-red-500";
@@ -94,7 +101,10 @@ export default function BuyingHouseForm({ initialData, onSubmit, onCancel, isSub
     <form onSubmit={handleSubmit} className="space-y-6">
       {/* Title Field */}
       <div>
-        <label htmlFor="title" className="block text-sm font-medium text-gray-700 mb-1">
+        <label
+          htmlFor="title"
+          className="block text-sm font-medium text-gray-700 mb-1"
+        >
           Title <span className="text-red-600">*</span>
         </label>
         <input
@@ -120,7 +130,10 @@ export default function BuyingHouseForm({ initialData, onSubmit, onCancel, isSub
 
       {/* Description Field */}
       <div>
-        <label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-1">
+        <label
+          htmlFor="description"
+          className="block text-sm font-medium text-gray-700 mb-1"
+        >
           Description <span className="text-red-600">*</span>
         </label>
         <textarea
@@ -175,14 +188,32 @@ export default function BuyingHouseForm({ initialData, onSubmit, onCancel, isSub
         >
           {isSubmitting ? (
             <>
-              <svg className="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+              <svg
+                className="animate-spin h-5 w-5 text-white"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+              >
+                <circle
+                  className="opacity-25"
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  strokeWidth="4"
+                ></circle>
+                <path
+                  className="opacity-75"
+                  fill="currentColor"
+                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                ></path>
               </svg>
               Saving...
             </>
+          ) : initialData ? (
+            "Update Item"
           ) : (
-            initialData ? "Update Item" : "Create Item"
+            "Create Item"
           )}
         </button>
       </div>

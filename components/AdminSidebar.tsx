@@ -60,7 +60,11 @@ const defaultNavGroups: NavGroup[] = [
         href: '/admin/buying-house',
         icon: <span className="w-2 h-2 bg-blue-400 rounded-full"></span>,
       },
-
+      {
+        label: 'Catalog',
+        href: '/admin/catalog',
+        icon: <span className="w-2 h-2 bg-yellow-400 rounded-full"></span>,
+      },
     ],
   },
   {
@@ -175,7 +179,7 @@ export default function AdminSidebar() {
       {/* Logo */}
       <div className="p-6 border-b border-gray-200">
         <Link href="/admin" className="flex items-center gap-2">
-          <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-lg flex items-center justify-center">
+          <div className="w-10 h-10 bg-linear-to-br from-blue-600 to-indigo-600 rounded-lg flex items-center justify-center">
             <span className="text-white font-bold text-lg">AS</span>
           </div>
           <div>

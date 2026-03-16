@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import PhotoUpload from "../../ui/PhoneUpload";
+import PhotoUpload from "../../ui/PhotoUpload";
 
 export default function HeroForm({ initialData, onSubmit, onCancel }) {
   const [formData, setFormData] = useState({
@@ -44,7 +44,7 @@ export default function HeroForm({ initialData, onSubmit, onCancel }) {
 
   const validateForm = () => {
     const newErrors = {};
-    
+
     if (!formData.title.trim()) {
       newErrors.title = "Title is required";
     }
@@ -61,7 +61,7 @@ export default function HeroForm({ initialData, onSubmit, onCancel }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    
+
     if (validateForm()) {
       onSubmit(formData);
     }
@@ -71,7 +71,10 @@ export default function HeroForm({ initialData, onSubmit, onCancel }) {
     <form onSubmit={handleSubmit} className="space-y-6">
       {/* Title Field */}
       <div>
-        <label htmlFor="title" className="block text-sm font-medium text-gray-700 mb-1">
+        <label
+          htmlFor="title"
+          className="block text-sm font-medium text-gray-700 mb-1"
+        >
           Title <span className="text-red-600">*</span>
         </label>
         <input
@@ -92,7 +95,10 @@ export default function HeroForm({ initialData, onSubmit, onCancel }) {
 
       {/* Description Field */}
       <div>
-        <label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-1">
+        <label
+          htmlFor="description"
+          className="block text-sm font-medium text-gray-700 mb-1"
+        >
           Description <span className="text-red-600">*</span>
         </label>
         <textarea
@@ -123,11 +129,16 @@ export default function HeroForm({ initialData, onSubmit, onCancel }) {
 
       {/* CTA Section */}
       <div className="border-t border-gray-200 pt-4">
-        <h3 className="text-lg font-medium text-gray-900 mb-3">Call to Action (CTA)</h3>
+        <h3 className="text-lg font-medium text-gray-900 mb-3">
+          Call to Action (CTA)
+        </h3>
 
         <div className="space-y-4">
           <div>
-            <label htmlFor="cta.text" className="block text-sm font-medium text-gray-700 mb-1">
+            <label
+              htmlFor="cta.text"
+              className="block text-sm font-medium text-gray-700 mb-1"
+            >
               CTA Text
             </label>
             <input
@@ -142,7 +153,10 @@ export default function HeroForm({ initialData, onSubmit, onCancel }) {
           </div>
 
           <div>
-            <label htmlFor="cta.href" className="block text-sm font-medium text-gray-700 mb-1">
+            <label
+              htmlFor="cta.href"
+              className="block text-sm font-medium text-gray-700 mb-1"
+            >
               CTA Link
             </label>
             <input

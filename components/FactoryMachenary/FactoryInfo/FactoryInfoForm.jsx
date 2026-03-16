@@ -1,8 +1,13 @@
 "use client";
 import { useState, useEffect } from "react";
-import PhotoUpload from "../../ui/PhoneUpload";
+import PhotoUpload from "../../ui/PhotoUpload";
 
-export default function FactoryInfoForm({ initialData, onSubmit, onCancel, isSubmitting }) {
+export default function FactoryInfoForm({
+  initialData,
+  onSubmit,
+  onCancel,
+  isSubmitting,
+}) {
   const [formData, setFormData] = useState({
     title: "",
     subtitle: "",
@@ -29,7 +34,7 @@ export default function FactoryInfoForm({ initialData, onSubmit, onCancel, isSub
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
-    
+
     if (errors[name]) {
       setErrors((prev) => ({ ...prev, [name]: "" }));
     }
@@ -44,26 +49,29 @@ export default function FactoryInfoForm({ initialData, onSubmit, onCancel, isSub
 
   const validateForm = () => {
     const newErrors = {};
-    
+
     if (!formData.title.trim()) {
       newErrors.title = "Title is required";
     }
-    
+
     if (!formData.subtitle.trim()) {
       newErrors.subtitle = "Subtitle is required";
     }
-    
+
     if (!formData.description.trim()) {
       newErrors.description = "Description is required";
     }
-    
+
     if (!formData.image) {
       newErrors.image = "Image is required";
     }
-    
+
     if (!formData.actions.trim()) {
       newErrors.actions = "Action link is required";
-    } else if (!formData.actions.match(/\.(pdf|doc|docx)$/i) && !formData.actions.startsWith('/')) {
+    } else if (
+      !formData.actions.match(/\.(pdf|doc|docx)$/i) &&
+      !formData.actions.startsWith("/")
+    ) {
       newErrors.actions = "Action must be a valid file path (PDF, DOC) or URL";
     }
 
@@ -73,7 +81,7 @@ export default function FactoryInfoForm({ initialData, onSubmit, onCancel, isSub
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    
+
     if (validateForm()) {
       onSubmit(formData);
     }
@@ -83,7 +91,10 @@ export default function FactoryInfoForm({ initialData, onSubmit, onCancel, isSub
     <form onSubmit={handleSubmit} className="space-y-6">
       {/* Title Field */}
       <div>
-        <label htmlFor="title" className="block text-sm font-medium text-gray-700 mb-1">
+        <label
+          htmlFor="title"
+          className="block text-sm font-medium text-gray-700 mb-1"
+        >
           Title <span className="text-red-600">*</span>
         </label>
         <input
@@ -105,7 +116,10 @@ export default function FactoryInfoForm({ initialData, onSubmit, onCancel, isSub
 
       {/* Subtitle Field */}
       <div>
-        <label htmlFor="subtitle" className="block text-sm font-medium text-gray-700 mb-1">
+        <label
+          htmlFor="subtitle"
+          className="block text-sm font-medium text-gray-700 mb-1"
+        >
           Subtitle <span className="text-red-600">*</span>
         </label>
         <input
@@ -127,7 +141,10 @@ export default function FactoryInfoForm({ initialData, onSubmit, onCancel, isSub
 
       {/* Description Field */}
       <div>
-        <label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-1">
+        <label
+          htmlFor="description"
+          className="block text-sm font-medium text-gray-700 mb-1"
+        >
           Description <span className="text-red-600">*</span>
         </label>
         <textarea
@@ -160,7 +177,10 @@ export default function FactoryInfoForm({ initialData, onSubmit, onCancel, isSub
 
       {/* Actions (PDF/File Link) Field */}
       <div>
-        <label htmlFor="actions" className="block text-sm font-medium text-gray-700 mb-1">
+        <label
+          htmlFor="actions"
+          className="block text-sm font-medium text-gray-700 mb-1"
+        >
           Action Link (PDF/File) <span className="text-red-600">*</span>
         </label>
         <div className="flex gap-2">
@@ -183,9 +203,24 @@ export default function FactoryInfoForm({ initialData, onSubmit, onCancel, isSub
               rel="noopener noreferrer"
               className="px-3 py-2 bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200 transition-colors inline-flex items-center"
             >
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+              <svg
+                className="w-5 h-5"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                />
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                />
               </svg>
             </a>
           )}
@@ -215,14 +250,32 @@ export default function FactoryInfoForm({ initialData, onSubmit, onCancel, isSub
         >
           {isSubmitting ? (
             <>
-              <svg className="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+              <svg
+                className="animate-spin h-5 w-5 text-white"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+              >
+                <circle
+                  className="opacity-25"
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  strokeWidth="4"
+                ></circle>
+                <path
+                  className="opacity-75"
+                  fill="currentColor"
+                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                ></path>
               </svg>
               Saving...
             </>
+          ) : initialData ? (
+            "Update Factory Info"
           ) : (
-            initialData ? "Update Factory Info" : "Add Factory Info"
+            "Add Factory Info"
           )}
         </button>
       </div>

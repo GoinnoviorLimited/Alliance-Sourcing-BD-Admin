@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import PhotoUpload from "../../ui/PhoneUpload";
+import PhotoUpload from "../../ui/PhotoUpload";
 
 export default function WeWorkForm({ initialData, onSubmit, onCancel }) {
   const [formData, setFormData] = useState({

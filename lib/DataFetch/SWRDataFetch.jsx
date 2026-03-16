@@ -54,3 +54,8 @@ export const useProductsData = () => {
   const { data, error, mutate } = useSWR(`${API_URL}/api/products`, fetcher);
   return { data, error, isLoading: !data && !error, mutate };
 }
+
+export const useCatalogData = () => {
+  const { data, error, mutate } = useSWR(`${API_URL}/api/catalog`, fetcher);
+  return { data, error, isLoading: !data && !error, mutate };
+}

@@ -1,7 +1,7 @@
 // components/admin/ApartForm.jsx
 "use client";
 import { useState, useEffect } from "react";
-import PhotoUpload from "../../ui/PhoneUpload";
+import PhotoUpload from "../../ui/PhotoUpload";
 
 export default function ApartForm({ initialData, onSubmit, onCancel, isSubmitting }) {
   const [formData, setFormData] = useState({

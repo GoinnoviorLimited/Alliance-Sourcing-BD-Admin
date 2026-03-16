@@ -1,8 +1,12 @@
 "use client";
 import { useState } from "react";
-import PhotoUpload from "../../ui/PhoneUpload";
+import PhotoUpload from "../../ui/PhotoUpload";
 
-export default function EstablishedExcellenceForm({ initialData, onSubmit, onCancel }) {
+export default function EstablishedExcellenceForm({
+  initialData,
+  onSubmit,
+  onCancel,
+}) {
   const [formData, setFormData] = useState({
     title: initialData?.title || "",
     subtitle: initialData?.subtitle || "",
@@ -15,7 +19,7 @@ export default function EstablishedExcellenceForm({ initialData, onSubmit, onCan
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
-    
+
     if (errors[name]) {
       setErrors((prev) => ({ ...prev, [name]: "" }));
     }
@@ -32,7 +36,7 @@ export default function EstablishedExcellenceForm({ initialData, onSubmit, onCan
     const updatedParagraphs = [...formData.paragraphs];
     updatedParagraphs[index] = value;
     setFormData((prev) => ({ ...prev, paragraphs: updatedParagraphs }));
-    
+
     if (errors.paragraphs) {
       setErrors((prev) => ({ ...prev, paragraphs: "" }));
     }
@@ -47,7 +51,9 @@ export default function EstablishedExcellenceForm({ initialData, onSubmit, onCan
 
   const removeParagraph = (index) => {
     if (formData.paragraphs.length > 1) {
-      const updatedParagraphs = formData.paragraphs.filter((_, i) => i !== index);
+      const updatedParagraphs = formData.paragraphs.filter(
+        (_, i) => i !== index,
+      );
       setFormData((prev) => ({ ...prev, paragraphs: updatedParagraphs }));
     }
   };
@@ -55,8 +61,10 @@ export default function EstablishedExcellenceForm({ initialData, onSubmit, onCan
   const moveParagraphUp = (index) => {
     if (index > 0) {
       const updatedParagraphs = [...formData.paragraphs];
-      [updatedParagraphs[index - 1], updatedParagraphs[index]] = 
-      [updatedParagraphs[index], updatedParagraphs[index - 1]];
+      [updatedParagraphs[index - 1], updatedParagraphs[index]] = [
+        updatedParagraphs[index],
+        updatedParagraphs[index - 1],
+      ];
       setFormData((prev) => ({ ...prev, paragraphs: updatedParagraphs }));
     }
   };
@@ -64,28 +72,30 @@ export default function EstablishedExcellenceForm({ initialData, onSubmit, onCan
   const moveParagraphDown = (index) => {
     if (index < formData.paragraphs.length - 1) {
       const updatedParagraphs = [...formData.paragraphs];
-      [updatedParagraphs[index], updatedParagraphs[index + 1]] = 
-      [updatedParagraphs[index + 1], updatedParagraphs[index]];
+      [updatedParagraphs[index], updatedParagraphs[index + 1]] = [
+        updatedParagraphs[index + 1],
+        updatedParagraphs[index],
+      ];
       setFormData((prev) => ({ ...prev, paragraphs: updatedParagraphs }));
     }
   };
 
   const validateForm = () => {
     const newErrors = {};
-    
+
     if (!formData.title.trim()) {
       newErrors.title = "Title is required";
     }
-    
+
     if (!formData.subtitle.trim()) {
       newErrors.subtitle = "Subtitle is required";
     }
-    
+
     if (!formData.image) {
       newErrors.image = "Image is required";
     }
-    
-    const validParagraphs = formData.paragraphs.filter(p => p.trim());
+
+    const validParagraphs = formData.paragraphs.filter((p) => p.trim());
     if (validParagraphs.length === 0) {
       newErrors.paragraphs = "At least one paragraph is required";
     }
@@ -96,13 +106,13 @@ export default function EstablishedExcellenceForm({ initialData, onSubmit, onCan
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    
+
     // Filter out empty paragraphs
     const filteredData = {
       ...formData,
-      paragraphs: formData.paragraphs.filter(p => p.trim())
+      paragraphs: formData.paragraphs.filter((p) => p.trim()),
     };
-    
+
     if (validateForm()) {
       onSubmit(filteredData);
     }
@@ -112,7 +122,10 @@ export default function EstablishedExcellenceForm({ initialData, onSubmit, onCan
     <form onSubmit={handleSubmit} className="space-y-6">
       {/* Title Field */}
       <div>
-        <label htmlFor="title" className="block text-sm font-medium text-gray-700 mb-1">
+        <label
+          htmlFor="title"
+          className="block text-sm font-medium text-gray-700 mb-1"
+        >
           Title <span className="text-red-600">*</span>
         </label>
         <input
@@ -133,7 +146,10 @@ export default function EstablishedExcellenceForm({ initialData, onSubmit, onCan
 
       {/* Subtitle Field */}
       <div>
-        <label htmlFor="subtitle" className="block text-sm font-medium text-gray-700 mb-1">
+        <label
+          htmlFor="subtitle"
+          className="block text-sm font-medium text-gray-700 mb-1"
+        >
           Subtitle <span className="text-red-600">*</span>
         </label>
         <input
@@ -173,8 +189,18 @@ export default function EstablishedExcellenceForm({ initialData, onSubmit, onCan
             onClick={addParagraph}
             className="inline-flex items-center px-3 py-1 text-sm bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors"
           >
-            <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+            <svg
+              className="w-4 h-4 mr-1"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M12 4v16m8-8H4"
+              />
             </svg>
             Add Paragraph
           </button>
@@ -182,7 +208,10 @@ export default function EstablishedExcellenceForm({ initialData, onSubmit, onCan
 
         <div className="space-y-4">
           {formData.paragraphs.map((paragraph, index) => (
-            <div key={index} className="relative group border rounded-lg p-4 bg-gray-50">
+            <div
+              key={index}
+              className="relative group border rounded-lg p-4 bg-gray-50"
+            >
               <div className="absolute right-2 top-2 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
                 <button
                   type="button"
@@ -191,8 +220,18 @@ export default function EstablishedExcellenceForm({ initialData, onSubmit, onCan
                   className="p-1 bg-gray-200 text-gray-600 rounded hover:bg-gray-300 disabled:opacity-30 disabled:cursor-not-allowed"
                   title="Move up"
                 >
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 15l7-7 7 7" />
+                  <svg
+                    className="w-4 h-4"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M5 15l7-7 7 7"
+                    />
                   </svg>
                 </button>
                 <button
@@ -202,8 +241,18 @@ export default function EstablishedExcellenceForm({ initialData, onSubmit, onCan
                   className="p-1 bg-gray-200 text-gray-600 rounded hover:bg-gray-300 disabled:opacity-30 disabled:cursor-not-allowed"
                   title="Move down"
                 >
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  <svg
+                    className="w-4 h-4"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M19 9l-7 7-7-7"
+                    />
                   </svg>
                 </button>
                 {formData.paragraphs.length > 1 && (
@@ -213,8 +262,18 @@ export default function EstablishedExcellenceForm({ initialData, onSubmit, onCan
                     className="p-1 bg-red-100 text-red-600 rounded hover:bg-red-200"
                     title="Remove paragraph"
                   >
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                    <svg
+                      className="w-4 h-4"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                      />
                     </svg>
                   </button>
                 )}
@@ -241,7 +300,7 @@ export default function EstablishedExcellenceForm({ initialData, onSubmit, onCan
         )}
 
         <p className="mt-2 text-xs text-gray-500">
-          Total paragraphs: {formData.paragraphs.filter(p => p.trim()).length}
+          Total paragraphs: {formData.paragraphs.filter((p) => p.trim()).length}
         </p>
       </div>
 

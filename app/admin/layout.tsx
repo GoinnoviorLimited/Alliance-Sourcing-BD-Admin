@@ -91,7 +91,7 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
 
             {/* User Profile */}
             <div className="flex items-center gap-3 pl-4 border-l border-gray-200">
-              <div className="w-9 h-9 bg-gradient-to-br from-blue-500 to-purple-500 rounded-full flex items-center justify-center text-white font-semibold text-sm">
+              <div className="w-9 h-9 bg-linear-to-br from-blue-500 to-purple-500 rounded-full flex items-center justify-center text-white font-semibold text-sm">
                 {userEmail.charAt(0).toUpperCase()}
               </div>
               <div className="hidden sm:block">
