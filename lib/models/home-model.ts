@@ -152,15 +152,61 @@ const catalogSchema = new Schema(
     timestamps: true,
   }
 );
+
+// Services Section
+const servicesFeatureSchema = new Schema(
+  {
+    title: { type: String, required: true, trim: true },
+    description: { type: String, required: true, trim: true },
+  },
+  { _id: false }
+);
+
+const servicesSchema = new Schema(
+  {
+    title: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+    description: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+    image: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+    imageAlt: {
+      type: String,
+      required: false,
+      trim: true,
+    },
+    imagePosition: {
+      type: String,
+      enum: ['left', 'right'],
+      default: 'left',
+    },
+    features: [servicesFeatureSchema],
+  },
+  {
+    timestamps: true,
+  }
+);
+
 // Prevent mongoose from returning cached models with old schemas during Next.js HMR
 delete mongoose.models.HeroSection;
 delete mongoose.models.Apart;
 delete mongoose.models.WeWork;
 delete mongoose.models.BuyingHouse;
 delete mongoose.models.Catalog;
+delete mongoose.models.ServicesSection;
 
 export const HeroSection = mongoose.models.HeroSection || mongoose.model("HeroSection", heroSectionSchema);
 export const Apart = mongoose.models.Apart || mongoose.model("Apart", ApartSchema);
 export const WeWork = mongoose.models.WeWork || mongoose.model("WeWork", WeWorkSchema);
 export const BuyingHouse = mongoose.models.BuyingHouse || mongoose.model("BuyingHouse", BuyingHouseSchema);
 export const Catalog = mongoose.models.Catalog || mongoose.model("Catalog", catalogSchema);
+export const ServicesSection = mongoose.models.ServicesSection || mongoose.model("ServicesSection", servicesSchema);

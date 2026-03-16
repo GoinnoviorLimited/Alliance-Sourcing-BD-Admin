@@ -1,6 +1,7 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import PhotoUpload from "../../ui/PhotoUpload";
+import { Plus, Trash2 } from "lucide-react";
 
 const AVAILABLE_ICONS = ["knitwear", "denim", "woven", "accessories"];
 
@@ -124,7 +125,7 @@ const CatalogForm = ({ initialData, onSubmit, onCancel, isSubmitting }) => {
   return (
     <form
       onSubmit={handleSubmit}
-      className="space-y-6 max-h-[80vh] overflow-y-auto p-4 relative"
+      className="space-y-6 relative pb-4"
     >
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
@@ -221,9 +222,9 @@ const CatalogForm = ({ initialData, onSubmit, onCancel, isSubmitting }) => {
             type="button"
             onClick={addCategory}
             disabled={formData.categories.length >= 4 || isSubmitting}
-            className="px-3 py-1 bg-green-600 text-white text-sm rounded-md hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="px-3 py-1 bg-green-50 text-green-600 border border-green-200 rounded hover:bg-green-100 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-1 text-sm"
           >
-            Add Category
+            <Plus className="w-4 h-4" /> Add Category
           </button>
         </div>
 
@@ -237,9 +238,10 @@ const CatalogForm = ({ initialData, onSubmit, onCancel, isSubmitting }) => {
                 <button
                   type="button"
                   onClick={() => removeCategory(index)}
-                  className="absolute top-2 right-2 text-red-600 hover:text-red-800"
+                  className="absolute top-2 right-2 p-1 text-red-500 hover:bg-red-50 rounded"
+                  title="Remove Category"
                 >
-                  Remove
+                  <Trash2 className="w-4 h-4" />
                 </button>
               )}
               <div>
@@ -298,7 +300,7 @@ const CatalogForm = ({ initialData, onSubmit, onCancel, isSubmitting }) => {
         </div>
       </div>
 
-      <div className="flex justify-end gap-3 border-t pt-4">
+      <div className="flex justify-end gap-3 sticky bottom-[-24px] bg-white pt-4 pb-4 border-t mt-6 z-10 w-full">
         <button
           type="button"
           onClick={onCancel}
